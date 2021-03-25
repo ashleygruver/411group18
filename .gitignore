@@ -240,3 +240,5 @@ $RECYCLE.BIN/
 
 .vscode/*
 Pipfile.lock
+
+**/node_modules
