@@ -1,0 +1,19 @@
+Technology Stack (consider at least 2 stacks)
+1. Flask
+2. React
+3. MongoDB
+
+Process:
+We chose React as our frontend javascript library because:
+- React is useful for building web applications with data. Because NPM is one of the largest package manager available, it can also be combined with other javascript frameworks or libraries for more features.
+- React is easy to test through view. We can test our work by manipulating the states passed into the view and check the output to see if they are functioning.
+- As a popular frontend library, we can easily find resources for React so as to build different functionalities for our project.
+
+We chose Flask as our backend framework due these main reasons:
+- Flask is a framework written in Python and uses Python to allow us to create APIs – as all members are familiar with Python (as we have taken CS 111), we thought that using Flask would be appropriate for us.
+- Flask is a micro-framework and has an easy learning curve. Majority of us do not have the experience of using a backend framework. Using Flask is very intuitive and will allow us to understand how backend frameworks work.
+- Python and pip also has an array of open-source libraries available for us to use. In the case that we need to work with additional libraries and functionalities, using Flask would be an appropriate case for us,
+
+We chose MongoDB to host our database for the following reasons:
+- Firstly, some of our members are familiar with the PyMongo library – this makes it easier to work with data using Python and MongoDB.
+- We preferred using a NoSQL database due to its simplicity and flexibility in storing data as a JSON.
