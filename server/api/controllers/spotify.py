@@ -25,6 +25,7 @@ def get_playlists():
 # API to get all album covers of a selected playlist
 @spotify.route("/api/get-album-covers/<playlist_id>", methods=["GET"])
 def get_all_album_covers(playlist_id):
+    # Accesses browser cookie to fetch access token
     access_token = request.cookies.get('access_token')
     try:
         url = "https://api.spotify.com/v1/playlists/" + playlist_id
@@ -36,11 +37,13 @@ def get_all_album_covers(playlist_id):
         response = requests.request("GET", url, headers=headers, data=payload)
         response = response.json()
         tracks = response["tracks"]["items"]
+        
         album_urls= [tracks[i]["track"]["album"]["images"][1]["url"] for i in range(len(tracks))]
         response = {
             "albumUrls": album_urls
         }
         return make_response(response, 200)
+
     except Exception as e:
         print(e)
 
