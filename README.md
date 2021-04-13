@@ -30,6 +30,12 @@ pipenv install dependency_name
 
 ### To run the Flask App
 
+Go to the directory of the server:
+```bash
+cd server
+```
+
+Run the server:
 ```bash
 export FLASK_APP=manage.py
 flask run
@@ -37,8 +43,27 @@ flask run
 
 ### To run the Flask App on Debug Mode
 
+Go to the directory of the server:
+```bash
+cd server
+```
+
+Run the server:
 ```bash
 export FLASK_APP=manage.py
 export FLASK_ENV=development
+flask run
+```
+
+### To run the React App
+
+Go to the directory of the app:
+```bash
+cd server
+```
+
+Run the server:
+```bash
+yarn start
 flask run
 ```
