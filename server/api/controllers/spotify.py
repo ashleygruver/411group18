@@ -88,8 +88,50 @@ def view_generated_playlist():
 
     return make_response(response_object, 200)
 
-@spotify.route("/api/add-generated-playlists/<playlist_id>", methods=["POST"])
-def add_generated_playlist(playlist_id):
+@spotify.route("/api/add-generated-playlists", methods=["POST"])
+def add_generated_playlist():
     # add_generated_playlist(user_id):
     #     - if user_id doesn’t exist, create a user_id field with that generated playlist
     #     - else, just add/append on that specific user_id field.
+
+    url = "https://api.spotify.com/v1/me"
+    access_token = request.cookies.get('access_token')
+    payload = {}
+    headers = {
+        'Authorization': 'Bearer ' + access_token
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    response = response.json()
+    spotify_user_id = response["id"]
+    user_exists = (playlist_db.find({"userId": spotify_user_id}).count() != 0)
+
+    playlist_db_data = request.get_json()
+
+    #does not have the user, so create one
+    if not user_exists:
+        try:
+            user_data = {
+                "userId": spotify_user_id,
+                "playlists": []
+            }
+            playlist_db.insert_one(user_data)
+
+
+        except Exception as e:
+            print(e)
+
+    #now we have a user, so we add a playlist
+    playlist_db.update({"userId": spotify_user_id}, {'$push': {'playlists': playlist_db_data}})
+
+    response_object = {
+        "message": "generated playlist in mongodb",
+        "status": True
+    }
+
+    return make_response(response_object, 200)
+    
+
+
+
+
