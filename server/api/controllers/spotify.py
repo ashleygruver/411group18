@@ -9,7 +9,8 @@ def get_colors_from_images(image_urls):
     auth = "key goes here";
     headers = {"Authorization": "Bearer {}".format(auth)};
     colors = [];
-
+    
+    assert(len(image_urls) == 2);
     for i in image_urls:
         message = {
           "requests": 
@@ -72,9 +73,30 @@ def get_all_album_covers(playlist_id):
         tracks = response["tracks"]["items"]
         
         album_urls= [tracks[i]["track"]["album"]["images"][1]["url"] for i in range(len(tracks))]
+        urls_dict
+        for i in album_urls:
+            if i in urls_dict:
+                urls_dict[i] += 1;
+            else:
+                urls_dict[i] = 1;
+
+        colors = get_colors_from_images(sorted(urls_dict, key=urls_dict.get, reverse=True)[:2]);
+
+        scores = {};
+        for i in range(len(colors)):
+            for j in colors[i].dominant_colors.colors:
+                if (j.color.red, j.color.green, j.color.blue) in scores:
+                    scores[(j.color.red, j.color.green, j.color.blue)] += j.score * urls_dict[sorted(urls_dict, key=urls_dict.get, reverse=True)[i]];
+                else:
+                    scores[(j.color.red, j.color.green, j.color.blue)] = j.score * urls_dict[sorted(urls_dict, key=urls_dict.get, reverse=True)[i]];
+
+        
+
         response = {
-            "albumUrls": album_urls
+            "colors": []
         }
+        for i in scores:
+            response["colors"].append({"color": i, "score": scores[i]});
         return make_response(response, 200)
 
     except Exception as e:
