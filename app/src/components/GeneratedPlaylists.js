@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import PlaylistBar from './material-ui/PlaylistBar'
+import GeneratedPlaylistBar from './material-ui/GeneratedPlaylistBar'
 import Button from '@material-ui/core/Button';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-const Playlists = () => {
+const GeneratedPlaylists = () => {
 
-	const [playlists, setPlaylists] = useState([]);
+	const [generatedPlaylists, setGeneratedPlaylists] = useState([]);
 
-	const getPlaylists = () => {
-		axios.get("http://localhost:5000/api/get-playlists", { withCredentials: true })
+	const getGeneratedPlaylists = () => {
+		axios.get("http://localhost:5000/api/view-generated-playlists", { withCredentials: true })
 			.then((res) => {
-				return res["data"]["items"]
-			})
-			.then((playlists) => {
-				const modifiedPlaylists = playlists.map(({ collaborative, description, href, primary_color, snapshot_id, type, ...keepAttrs }) => keepAttrs);
-				setPlaylists(modifiedPlaylists);
-				console.log(modifiedPlaylists)
-				return;
+                console.log(res["data"]["generatedPlaylists"])
+				setGeneratedPlaylists(res["data"]["generatedPlaylists"]);
 			})
 	}
 
 	useEffect(() => {
-		getPlaylists();
+		getGeneratedPlaylists();
 	}, [])
 
 	const useStyles = makeStyles((theme) => ({
@@ -46,7 +41,7 @@ const Playlists = () => {
 
 		playlistWrapper: {
 			width: '80%',
-			backgroundColor: 'white',
+			backgroundColor:'white',
 			margin: 'auto',
 			[theme.breakpoints.down('sm')]: {
 				width: '100%',
@@ -68,7 +63,7 @@ const Playlists = () => {
 		},
 
 		button: {
-			width: '20vw',
+			width: '10vw',
 			height: '4vw',
 			margin: '1vw',
 			fontSize: '1vw',
@@ -90,27 +85,27 @@ const Playlists = () => {
 		(
 			<div className={classes.main}>
 				<div className={classes.header}>
-					<div className={classes.text}>
-						<h1>Playlist Palettes</h1>
-					</div>
-					<Button href="http://localhost:3000/playlists/generated" className={classes.button} variant="contained">
-						View Generated Playlists
+					<h1>Playlist Palettes</h1>
+					<Button href="http://localhost:3000/playlists" className={classes.button} variant="contained">
+						Back
               		</Button>
 				</div>
 				<div className={classes.playlistWrapper}>
-					<h2>My Playlists</h2>
-					<div className={classes.playlists}>
-						<h1>{playlists.map(playlist => (
-							<PlaylistBar
-								name={playlist["name"]}
-								imageURL={playlist["images"][0]["url"]}
-								owner={playlist["owner"]["display_name"]}
-								tracks={playlist["tracks"]["total"]}
-								URL={playlist['external_urls']['spotify']}
-								id={playlist['id']}
-							/>
-						))}</h1>
-					</div>
+					<h2>Generated Playlists</h2>
+						<div className={classes.playlists}>
+							<h1>{generatedPlaylists.map(playlist => (
+								<GeneratedPlaylistBar 
+									name={playlist["name"]}
+									imageURL={playlist["imageUrl"]}
+									id={playlist['id']}
+									colorOne={playlist["colors"][0]}
+									colorTwo={playlist["colors"][1]}
+									colorThree={playlist["colors"][2]}
+									colorFour={playlist["colors"][3]}
+									colorFive={playlist["colors"][4]}
+									/>
+							))}</h1>
+						</div>
 				</div>
 			</div>
 		)
@@ -118,4 +113,4 @@ const Playlists = () => {
 }
 
 
-export default Playlists;
+export default GeneratedPlaylists;
