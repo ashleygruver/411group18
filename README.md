@@ -62,8 +62,7 @@ Go to the directory of the app:
 cd server
 ```
 
-Run the server:
+Run the React App:
 ```bash
-yarn start
-flask run
+npm start
 ```
