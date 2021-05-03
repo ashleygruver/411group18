@@ -1,14 +1,13 @@
 import React from 'react';
-import { makeStyles, createMuiTheme, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActions from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Button';
 import { Route, BrowserRouter as Router, Link } from 'react-router-dom';
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -111,7 +110,14 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function PlaylistBar(props) {
+const PlaylistBar = (props) => {
+
+  const generateColors = (id) => {
+		axios.get("http://localhost:5000/api/get-album-covers/" + id, { withCredentials: true })
+    .then((res) => {
+      console.log(res);
+    })
+	}
 
   const classes = useStyles();
 
@@ -134,11 +140,15 @@ export default function PlaylistBar(props) {
               <Button href={props.URL} target='_blank' className={classes.button} variant="contained">
                 Listen 
               </Button>
-              <Button className={classes.button} variant="contained">
+              <Button className={classes.button} variant="contained" onClick={() => generateColors(props.id)}>
                 Use This Playlist
               </Button>
           </CardActions>
         </div>
     </Card>
   );
+
 }
+
+
+export default PlaylistBar;

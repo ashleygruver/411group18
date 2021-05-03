@@ -13,11 +13,13 @@ import requests
 import json
 import os
 
+from api import app
+
 authentication = Blueprint("authentication", __name__)  # initialize blueprint
 
 
-CLIENT_ID = "1c5183fbe4c5491789c87f8638deb99d"
-CLIENT_SECRET = "e5ebd2b68d98473d999ed3b7046de7ea"
+CLIENT_ID = app.config["CLIENT_ID"]
+CLIENT_SECRET =  app.config["CLIENT_SECRET"]
 REDIRECT_URI = "http://localhost:5000/callback"
 frontend_redirect_uri = "http://localhost:3000"
 
