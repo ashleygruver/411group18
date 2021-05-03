@@ -83,6 +83,7 @@ const Playlists = () => {
 									owner={playlist["owner"]["display_name"]}
 									tracks={playlist["tracks"]["total"]}
 									URL={playlist['external_urls']['spotify']}
+									id={playlist['id']}
 									/>
 							))}</h1>
 						</div>
