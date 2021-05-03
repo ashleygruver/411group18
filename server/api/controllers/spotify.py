@@ -73,7 +73,6 @@ def get_all_album_covers(playlist_id):
         response = requests.request("GET", url, headers=headers, data=payload)
         response = response.json()
         tracks = response["tracks"]["items"]
-        
         album_urls= [tracks[i]["track"]["album"]["images"][1]["url"] for i in range(len(tracks))]
         urls_dict
         for i in album_urls:
@@ -91,8 +90,6 @@ def get_all_album_covers(playlist_id):
                     scores[(j.color.red, j.color.green, j.color.blue)] += j.score * urls_dict[sorted(urls_dict, key=urls_dict.get, reverse=True)[i]];
                 else:
                     scores[(j.color.red, j.color.green, j.color.blue)] = j.score * urls_dict[sorted(urls_dict, key=urls_dict.get, reverse=True)[i]];
-
-        
 
         response = {
             "colors": []
