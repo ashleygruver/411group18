@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import '../App.css';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import querystring from 'querystring';
+// might have to do 'yarn add @material-ui/icons
 
 const Home = () => {
 
@@ -22,15 +24,70 @@ const Home = () => {
     )
   }
 
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      minHeight: '100vh',
+      backgroundImage: `url(${process.env.PUBLIC_URL + '/imgs/listening.png'})`,
+      backgroundRepeat: "no-repeat",
+      backgroundSize: 'cover',
+      display: "block",
+      float: "left"
+    },
+    logo: {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingTop: '50px',
+    },
+    text: {
+      display: 'flex',
+      justifyContent: 'center', //horizontal
+      alignItems: 'center', //vertical
+      lineHeight: '80px', //line spacing
+      letterSpacing: '10px', //letter spacing
+      height: '450px',
+      textAlign: 'center',
+      color: 'white',
+      fontSize: 20,
+    },
+    spotify: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    button: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    spotifyLogin: {
+      paddingBottom: "5%"
+    }
+  }));
+
+  const classes = useStyles();
   return (
     (
-      <div className="App">
-        <Button onClick={spotifyLogin} variant="contained">Login with Spotify</Button>
+      <div className={classes.root}>
+        <div className={classes.logo}>
+          <img src='/imgs/Group 11.png' width='13%'></img>
+        </div>
+        <div className={classes.text}>
+          <h1>WHERE <br /> MUSIC MEETS <br /> COLOR.</h1>
+        </div>
+        <div className={classes.spotifyLogin}>
+          <div className={classes.spotify}>
+            <img src='/imgs/spotify2.png' width='13%'></img>
+          </div>
+          <div className={classes.button}>
+            <Button onClick={spotifyLogin} variant="contained" style={{
+              backgroundColor: "#1DB954",
+              color: "#191414",
+              fontWeight: "bold"
+            }}>Login with Spotify</Button>
+          </div>
+        </div>
       </div>
     )
 
   )
 }
-
 
 export default Home;

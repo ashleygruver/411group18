@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import PlaylistBar from './material-ui/PlaylistBar'
+import Button from '@material-ui/core/Button';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const Playlists = () => {
 
@@ -12,7 +14,7 @@ const Playlists = () => {
 				return res["data"]["items"]
 			})
 			.then((playlists) => {
-				const modifiedPlaylists = playlists.map(({collaborative, description, external_urls, href, owner, primary_color, snapshot_id, tracks, type, ...keepAttrs}) => keepAttrs);
+				const modifiedPlaylists = playlists.map(({collaborative, description, href, primary_color, snapshot_id, type, ...keepAttrs}) => keepAttrs);
 				setPlaylists(modifiedPlaylists);
 				console.log(modifiedPlaylists)
 				return;
@@ -23,18 +25,70 @@ const Playlists = () => {
 		getPlaylists();
 	}, [])
 
+	const useStyles = makeStyles((theme) => ({
+
+		main: {
+			display: 'flex',
+			flexDirection: 'column',
+			backgroundColor: '#bfbfbf',
+		},
+
+		header: {
+			backgroundColor: 'black',
+			color: 'white',
+			fontSize: '18px',
+			paddingLeft: '10px',
+		},
+
+		playlistWrapper: {
+			width: '80%',
+			backgroundColor:'white',
+			margin: 'auto',
+			[theme.breakpoints.down('sm')]: {
+				width: '100%',
+			},
+			'& h2': {
+				textAlign: 'center',
+				fontSize: '8vw',
+				margin: 0,
+				[theme.breakpoints.up('xl')]: {
+					fontSize: '153.6px',
+				},
+			},
+		},
+
+		playlists: {
+			width: '90%',
+			backgroundColor: 'red',
+			margin: 'auto',
+		},
+
+	}));
+
+	const classes = useStyles();
+
 	return (
 		(
-			<div>
-				<h1>{playlists.map(playlist => (
-					<PlaylistBar 
-						name={playlist["name"]}
-						imageURL={playlist["images"][0]["url"]}
-					/>
-				))}</h1>
+			<div className={classes.main}>
+				<div className={classes.header}>
+					<h1>Playlist Palettes</h1>
+				</div>
+				<div className={classes.playlistWrapper}>
+					<h2>My Playlists</h2>
+						<div className={classes.playlists}>
+							<h1>{playlists.map(playlist => (
+								<PlaylistBar 
+									name={playlist["name"]}
+									imageURL={playlist["images"][0]["url"]}
+									owner={playlist["owner"]["display_name"]}
+									tracks={playlist["tracks"]["total"]}
+									URL={playlist['external_urls']['spotify']}
+									/>
+							))}</h1>
+						</div>
+				</div>
 			</div>
 		)
-
 	)
 }
 
