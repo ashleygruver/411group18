@@ -14,8 +14,8 @@ function App() {
       <Route exact path="/" component={Home} />
       <Route exact path="/test" component={Test} />
       <Route exact path="/playlists" component={Playlists} />
-      <Route exact path="/song/:id" component={Song} />
-      <Route exact path="/playlists/generated" component={GeneratedPlaylists} />
+      <Route exact path="/playlists/:id" component={Song} />
+      <Route exact path="/generated-playlists" component={GeneratedPlaylists} />
 
     </Router>
   );

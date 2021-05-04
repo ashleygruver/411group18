@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
-
-import Box from '@material-ui/core/Box';
+import axios from 'axios'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,8 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
   useParams
 } from "react-router-dom";
 import { Container } from '@material-ui/core';
@@ -22,42 +18,42 @@ import { Container } from '@material-ui/core';
 const rando = Math.floor(Math.random() * 10);
 
 function choosePattern(param) {
-  if (param == 0) {
+  if (param === 0) {
     return "url(https://i.imgur.com/KXYyuQa.png)"
   }
-  if (param == 1) {
+  if (param === 1) {
     return "url(https://i.imgur.com/crAz0EG.png)"
 
   }
-  if (param == 2) {
+  if (param === 2) {
     return "url(https://i.imgur.com/IH7mCd7.png)"
 
   }
-  if (param == 3) {
+  if (param === 3) {
     return "url(https://i.imgur.com/MVCuQTH.png)"
 
   }
-  if (param == 4) {
+  if (param === 4) {
     return "url(https://i.imgur.com/GbvJ0hZ.png)"
 
   }
-  if (param == 5) {
+  if (param === 5) {
     return "url(https://i.imgur.com/h77Rfii.png)"
 
   }
-  if (param == 6) {
+  if (param === 6) {
     return "url(https://i.imgur.com/7d1QwYl.png)"
 
   }
-  if (param == 7) {
+  if (param === 7) {
     return "url(https://i.imgur.com/fwNroRf.png)"
 
   }
-  if (param == 8) {
+  if (param === 8) {
     return "url(https://i.imgur.com/hl4rqbK.png)"
 
   }
-  if (param == 9) {
+  if (param === 9) {
     return "url(https://i.imgur.com/QnQi3hC.png)"
 
   }
@@ -107,76 +103,29 @@ function determineFontColor(color) {
 
 
 
-/*
-START SECTION:
-This is an idea of how to parse an incoming request.
-This is assuming that the sent version of the url
-will replace every / with < so that the url can
-be parsed by the browser properly. IDK if this 
-is the best way to go abaout it.
-
-
-TEST CASE:
-
-name: Random Songs
-imageUrl: https://source.unsplash.com/random
-totalSongs = 3020
-author: Spotify
-link to playlist -> https://open.spotify.com/playlist/31J0PX4kQOlImKIX3FT2nq
-
-url would be : localhost:3000/song/Random Songs,https:<<source.unsplash.com<random,3020,Spotify,https:<<open.spotify.com<playlist<31J0PX4kQOlImKIX3FT2nq
-
-
-*/
-var name = '';
-var imageUrl = '';
-var totalSongs = '';
-var author = '';
-var linktoPlaylist = '';
-
-function fixURL(url) {
-  return url.replaceAll("<", "/") 
-}
-
-function parseID(str) {
-  var parsedValue = str.split(",")
-  name = parsedValue[0]
-  imageUrl = "url(" + fixURL(parsedValue[1])+ ")"
-  console.log(imageUrl)
-  totalSongs = parsedValue[2]
-  author = parsedValue[3]
-  linktoPlaylist = fixURL(parsedValue[4])
-}
-
-/*
-END SECTION
-
-*/
-
-
-
-
 const Song = () => {
 
+  const [name, setName] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [totalSongs, setTotalSongs] = useState('');
+  const [author, setAuthor] = useState('');
+  const [linktoPlaylist, setLinktoPlaylist] = useState('');
+
   const [background, setBackground] = useState(backgroundBaseColor);
-
   const [font, setFont] = useState(fontBaseColor);
-
   const [hovered, setHovered] = useState(1);
 
 /*  **** Colors from the Google API would be placed ***** */
-  const [color1] = useState("#cfa074");
-  const [color2] = useState("#fd45d1");
-  const [color3] = useState("#ffc410");
-  const [color4] = useState("#44b3c4");
+  const [color1, setColor1] = useState("#ffffff");
+  const [color2, setColor2] = useState("#ffffff");
+  const [color3, setColor3] = useState("#ffffff");
+  const [color4, setColor4] = useState("#ffffff");
 
   // determines the appropiate font color based on the background color
   const font1 = determineFontColor(color1);
   const font2 = determineFontColor(color2);
   const font3 = determineFontColor(color3);
   const font4 = determineFontColor(color4);
-
-
 
 
   const setStyle = (background, font) => {
@@ -187,12 +136,46 @@ const Song = () => {
   const borderBase1 = 'medium solid ' + background;
   const borderBase2 = 'thin solid ' + '#ffffff'; // base2 is white the whole time; no changes
 
+  function fixURL(url) {
+    return url.replaceAll("<", "/") 
+  }
+
   const {id} = useParams(); 
   // grab the url id; from the parameters we can parse the necessary information to get the
   // image, name, song count, etc.
-  parseID(id);
+  // parseID(id);
 
+  const generateColors = (id) => {
+		axios.get("http://localhost:5000/api/get-album-covers/" + id, { withCredentials: true })
+    .then((res) => {
+      setColor1(res["data"]["colors"][0]["hex"])
+      setColor2(res["data"]["colors"][1]["hex"])
+      setColor3(res["data"]["colors"][2]["hex"])
+      setColor4(res["data"]["colors"][3]["hex"])
+    })
+	}
 
+  const getPlaylists = () => {
+		axios.get("http://localhost:5000/api/get-playlists", { withCredentials: true })
+			.then((res) => {
+				return res["data"]["items"]
+			})
+			.then((playlists) => {
+				const modifiedPlaylists = playlists.map(({ collaborative, description, href, primary_color, snapshot_id, type, ...keepAttrs }) => keepAttrs);
+				const playlist = modifiedPlaylists.find(x => x.id === id);
+        console.log(playlist["images"][0]["url"])
+        setName(playlist["name"])
+        setImageUrl("url(" + fixURL(playlist["images"][0]["url"])+ ")")
+        setTotalSongs(playlist["tracks"]["total"])
+        setAuthor(playlist["owner"]["display_name"])
+        setLinktoPlaylist(playlist["external_urls"]["spotify"])
+			})
+	}
+
+  useEffect(() => {
+    getPlaylists();
+		generateColors(id);
+	}, [])
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -343,7 +326,7 @@ const Song = () => {
         <div className={classes.paper}>
           <Typography component="h1" variant="h6">
             Playlist by: {author}<br></br>
-            Number of Songs: {totalSongs}
+            Number of Songs: {"" | totalSongs}
           </Typography>
         </div>
 

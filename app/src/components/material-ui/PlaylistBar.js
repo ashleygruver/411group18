@@ -6,8 +6,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActions from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { Route, BrowserRouter as Router, Link } from 'react-router-dom';
-import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -112,13 +110,6 @@ const useStyles = makeStyles((theme) => ({
 
 const PlaylistBar = (props) => {
 
-  const generateColors = (id) => {
-		axios.get("http://localhost:5000/api/get-album-covers/" + id, { withCredentials: true })
-    .then((res) => {
-      console.log(res);
-    })
-	}
-
   const classes = useStyles();
 
   return (
@@ -140,7 +131,7 @@ const PlaylistBar = (props) => {
               <Button href={props.URL} target='_blank' className={classes.button} variant="contained">
                 Listen 
               </Button>
-              <Button className={classes.button} variant="contained" onClick={() => generateColors(props.id)}>
+              <Button className={classes.button} variant="contained" onClick={() => window.location.href="/playlists/" + props.id}>
                 Use This Playlist
               </Button>
           </CardActions>
