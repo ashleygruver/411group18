@@ -7,6 +7,8 @@ spotify = Blueprint("spotify", __name__)  # initialize blueprint
 playlist_db = mongo.db.playlists
 
 # Helper function for Calling Google API
+
+
 def get_colors_from_images(image_urls):
     """Call the Google API to get the principal colors from the images"""
     GOOGLE_API_KEY = app.config["GOOGLE_API_KEY"]
@@ -85,7 +87,7 @@ def get_colors_from_album(playlist_id):
         colors = get_colors_from_images(
             sorted(urls_dict, key=urls_dict.get, reverse=True)[:2]
         )
-        
+
         scores = {}
         for i in range(len(colors)):
             for j in colors[i]["responses"][0]["imagePropertiesAnnotation"]["dominantColors"]["colors"]:
@@ -102,7 +104,8 @@ def get_colors_from_album(playlist_id):
             "colors": []
         }
         for i in scores:
-            google_response["colors"].append({"color": i, "score": scores[i], "hex": "#%02x%02x%02x" % i})
+            google_response["colors"].append(
+                {"color": i, "score": scores[i], "hex": "#%02x%02x%02x" % i})
 
         url = "https://api.spotify.com/v1/me"
         access_token = request.cookies.get('access_token')
@@ -111,10 +114,12 @@ def get_colors_from_album(playlist_id):
             'Authorization': 'Bearer ' + access_token
         }
 
-        spotify_user_response = requests.request("GET", url, headers=headers, data=payload)
+        spotify_user_response = requests.request(
+            "GET", url, headers=headers, data=payload)
         spotify_user_response = spotify_user_response.json()
         spotify_user_id = spotify_user_response["id"]
-        user_exists = (playlist_db.find({"userId": spotify_user_id}).count() != 0)
+        user_exists = (playlist_db.find(
+            {"userId": spotify_user_id}).count() != 0)
 
         playlist_db_data = {
             "id": playlist_id,
@@ -135,10 +140,17 @@ def get_colors_from_album(playlist_id):
             except Exception as e:
                 print(e)
 
-        # now we have a user, so we add a playlist
-        playlist_db.update({"userId": spotify_user_id}, {
-                        '$push': {'playlists': playlist_db_data}})
-        
+        playlist_exists = (playlist_db.find({
+            "playlists.id": {"$in": [playlist_db_data["id"]]}
+        }).count() != 0)
+
+        print(playlist_exists)
+        if not playlist_exists:
+
+            # now we have a user, so we add a playlist
+            playlist_db.update({"userId": spotify_user_id}, {
+                '$push': {'playlists': playlist_db_data}})
+
         print("updated to DB")
 
         print(type(google_response))
@@ -204,6 +216,7 @@ def add_generated_playlist():
     response = response.json()
     spotify_user_id = response["id"]
     user_exists = (playlist_db.find({"userId": spotify_user_id}).count() != 0)
+    print(user_exists)
 
     playlist_db_data = request.get_json()
 
@@ -218,10 +231,6 @@ def add_generated_playlist():
 
         except Exception as e:
             print(e)
-
-    # now we have a user, so we add a playlist
-    playlist_db.update({"userId": spotify_user_id}, {
-                       '$push': {'playlists': playlist_db_data}})
 
     response_object = {
         "message": "generated playlist in mongodb",

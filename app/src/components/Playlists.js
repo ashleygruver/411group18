@@ -93,7 +93,7 @@ const Playlists = () => {
 					<div className={classes.text}>
 						<h1>Playlist Palettes</h1>
 					</div>
-					<Button href="http://localhost:3000/playlists/generated" className={classes.button} variant="contained">
+					<Button href="http://localhost:3000/generated-playlists" className={classes.button} variant="contained">
 						View Generated Playlists
               		</Button>
 				</div>

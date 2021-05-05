@@ -1,9 +1,20 @@
 # 411group18
-## Justin Chan, Jin Young Bang, Jin Lou, Jacob Gruver, Christopher Balboni, Nonso Chuckwujama
+## Group 18: Justin Chan, Jin Young Bang, Jin Lou, Jacob Gruver, Christopher Balboni, Nonso Chuckwujama
 
 To run the application, both the Flask App (located inside the server directory) and the React App (located inside the app directory) must be running together. 
 
+In order to run the application without any trouble, specific environment variables are needed to set by creating a .env file in the server directory.
+
 To replicate running the application, ensure that the Flask server is running on localhost with port 5000.
+
+## Getting started
+1. Install project dependencies:
+    - `git`
+    - `python 3.6+`
+    - `pipenv` - follow instructions: https://github.com/pypa/pipenv
+    - `node >= 10.16` - follow instructions: https://nodejs.org/en/
+    - `npm >=5.6`
+
 
 ## Notes:
 
